@@ -56,6 +56,9 @@ def main():
         if args.init_state_index is not None:
             init_kwargs["episode_index"] = args.init_state_index
         original_init(self, *init_args, **init_kwargs)
+        if args.episode_length is not None:
+            # Robosuite otherwise ends at its independent 1000-step horizon.
+            self._env.env.horizon = args.episode_length + self.num_steps_wait
 
     def sample(env, step):
         raw = env._env.env
@@ -163,8 +166,10 @@ def main():
         trace_path.write_text(json.dumps(trace, indent=2) + "\n")
     if args.annotate_videos:
         from render_diagnostic_videos import annotate_task_videos
+        from export_state_change_frames import export_state_change_frames
 
         annotate_task_videos(output_dir)
+        export_state_change_frames(output_dir)
 
 
 if __name__ == "__main__":

@@ -46,7 +46,8 @@ For the full 130-task MINT-Light evaluation, run:
 ```
 
 The runner uses ten episodes per task, seed 1000, and a 4000-action limit by
-default. Goal success still ends an episode immediately. Each task directory
+default. The tracer raises robosuite's horizon to cover all 4000 policy actions
+after reset settling. Goal success still ends an episode immediately. Each task directory
 contains `diagnostic_trace.json`, `eval_info.json`, raw videos in `videos/`,
 and state-captioned videos in `annotated_videos/`. Translucent captions over
 the lower portion of the scene show true atoms from the task's initial and goal
@@ -56,3 +57,9 @@ Both captions update at the action frame where
 the predicate changes, including the terminal frame. `summary.json` records
 completed tasks and successes. Rerunning the command skips complete tasks and
 finishes annotation when a rollout completed but annotation did not.
+
+`state_changes/episode_XX/` contains one raw scene PNG for each symbolic state
+change, named by action step, and `changes.json` lists each step, timestamp,
+image path, added/removed atoms, and the full original, diagnostic, and extended
+states after that action. Step 0 records the initial state. These images come
+from the uncaptioned video, so they remain suitable for image analysis.
