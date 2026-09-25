@@ -36,3 +36,21 @@ originally occupied index `i` in a batch, rerun episodes `0..i` from the same
 starting seed to preserve the initial-state sequence. Even then, GPU policy
 sampling may differ from a previous run, so compare recorded outcomes rather
 than assuming exact trajectory replay.
+
+For the full 130-task MINT-Light evaluation, run:
+
+```bash
+/path/to/MINT/.venv/bin/python scripts/trace_all_mint_light_diagnostics.py \
+  --checkpoint /path/to/MINT-Light-checkpoint \
+  --output-dir outputs/eval/mint_light_extended_4000
+```
+
+The runner uses ten episodes per task, seed 1000, and a 4000-action limit by
+default. Goal success still ends an episode immediately. Each task directory
+contains `diagnostic_trace.json`, `eval_info.json`, raw videos in `videos/`,
+and state-labeled videos in `annotated_videos/`. The left panel shows true atoms
+from the task's initial and goal BDDL predicates; the right panel shows the
+additional diagnostic predicates. Both panels update at the action frame where
+the predicate changes, including the terminal frame. `summary.json` records
+completed tasks and successes. Rerunning the command skips complete tasks and
+finishes annotation when a rollout completed but annotation did not.
